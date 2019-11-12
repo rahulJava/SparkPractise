@@ -9,7 +9,9 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 
-public class Main2 {
+import scala.Tuple2;
+
+public class Example3 {
 
 	public static void main(String[] args) 
 	{
@@ -21,15 +23,13 @@ public class Main2 {
 		Logger.getLogger("org.apache").setLevel(Level.WARN);
 		SparkConf conf = new SparkConf().setAppName("starting spark").setMaster("local[*]");
 		JavaSparkContext sc = new JavaSparkContext(conf);
-		JavaRDD<Integer> myRDD =sc.parallelize(inputData);
-		Math.sqrt(23);
-		Integer result = myRDD.reduce((value1,value2)->value1 + value2);
-		JavaRDD<Double> sqrtRDD=myRDD.map((value -> Math.sqrt(value)));
-		sqrtRDD.foreach( value-> System.out.println(value));
+		JavaRDD<Integer> originalIntegers =sc.parallelize(inputData);
 		
-		System.out.println(sqrtRDD.count());
-		System.out.println(result);
-		sc.close();
+		//JavaRDD<IntegerWithSquareRoot > sqrtRDD=originalIntegers.map(value->new IntegerWithSquareRoot(value));
+		
+		JavaRDD <Tuple2<Integer, Double>> sqrtRDD = originalIntegers.map(value-> new Tuple2<Integer,Double>(value,Math.sqrt(value)));
+		sqrtRDD.foreach( value-> System.out.println(value));
+		sc.close();	
 		
 		
 		
